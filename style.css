@@ -1,0 +1,82 @@
+* {  
+  margin:0;  /* 브라우저 기본 마진 리셋 */
+  padding:0;  /* 브라우저 기본 패딩 리셋 */
+  box-sizing: border-box;  /* 테두리까지 포함해서 박스 모델 너비로 계산 */
+}
+
+#container{
+  width:100%;   /* 내용 전체의 너비 */
+  margin:0px auto;  /* 내용을 화면 가운데 배치하도록 좌우 마진을 auto로 */
+}
+
+#top{
+  height:70vh;
+  width:100%;
+  display: flex;
+  background: linear-gradient(to bottom, skyblue,white 87%, rgb(106, 81, 55) 3%);
+}
+
+#bottom{
+  height:30vh;
+  width:100%;
+  display: flex;
+  background: linear-gradient(to bottom, rgb(106, 81, 55), sienna);
+}
+
+#top_main, #bottom_main{
+  height:100%;
+  width:100%;
+}
+
+#title, #message{
+  text-align: center;
+  height:15%;
+}
+
+#menu{
+  float:right;
+}
+
+.icon{
+  width:70px;
+  height:70px;
+  background:transparent;
+  display: block;
+  margin-bottom:1vh;
+}
+
+#game{
+  display: flex;
+  align-items:end;
+  justify-content: center;
+  height:70%;
+}
+
+#animation{
+  display: flex;
+  align-items: baseline;
+}
+
+
+#miner_div{
+  background-image:url(img/rock_background.png);
+  background-repeat:no-repeat;
+  background-position: 50% 100%;
+  width: 500px;
+  height: auto;
+}
+
+#miner_stop{
+  width:291px;
+  height:304px;
+  margin-left:15%;
+  margin-bottom:5%;
+}
+
+#miner_motion{
+  width:291px;
+  height:304px;
+  margin-left:15%;
+  margin-bottom:9%;
+  display:none;
+}
