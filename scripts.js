@@ -8,6 +8,7 @@ const loadListData = () => {
     .then(response => response.json())
     .then(data => {
       excelData = data;
+      console.log('Loaded list data:', excelData); // 콘솔 로그 추가
       populateListTable();
     })
     .catch(error => {
@@ -33,6 +34,7 @@ document.getElementById('miner_stop').addEventListener('click', function() {
       const rarity = data.result[1]; // 희귀도, result 배열의 두 번째 값
       const category = data.result[2]; // 카테고리, result 배열의 세번째 값
       const item_name = data.result[3]; // 아이템 이름, result 배열의 네 번째 값
+      console.log('Generated item:', item_name); // 콘솔 로그 추가
       messageDiv.innerHTML = `<div class="speech-bubble">${item_name}(${rarity}등급) 아이템을 획득했습니다!</div>`;
 
       clearTimeout(hideMessageTimeout);
@@ -121,8 +123,10 @@ function populateListTable() {
   const tableBody = document.querySelector('#list-table tbody');
   tableBody.innerHTML = '';
   excelData.forEach(item => {
+    const itemName = item.아이템.trim(); // 공백 제거
     const row = document.createElement('tr');
-    row.setAttribute('data-item', item.아이템);
+    row.setAttribute('data-item', itemName);
+    console.log('Setting data-item:', itemName); // 콘솔 로그 추가
     row.innerHTML = `
       <td>${item.카테고리}</td>
       <td>${item.아이템}</td>
@@ -130,11 +134,26 @@ function populateListTable() {
     `;
     tableBody.appendChild(row);
   });
+
+  // 테이블 행 확인
+  const rows = document.querySelectorAll('#list-table tr');
+  rows.forEach(row => {
+    console.log('Row data-item:', row.getAttribute('data-item')); // 추가된 콘솔 로그
+  });
 }
 
 function checkAndStrikeItem(item_name) {
-  const matchingRow = document.querySelector(`#list-table tr[data-item="${item_name}"]`);
-  if (matchingRow) {
-    matchingRow.classList.add('completed');
-  }
+  console.log('Checking item for strike:', item_name); // 콘솔 로그 추가
+  const normalizedItemName = item_name.trim();
+  console.log('Normalized item name for comparison:', normalizedItemName); // 콘솔 로그 추가
+  const rows = document.querySelectorAll('#list-table tr');
+  
+  rows.forEach(row => {
+    const dataItem = row.getAttribute('data-item');
+    console.log('Comparing with:', dataItem); // 콘솔 로그 추가
+    if (dataItem && dataItem === normalizedItemName) {
+      console.log('Item matched:', normalizedItemName); // 콘솔 로그 추가
+      row.classList.add('completed');
+    }
+  });
 }

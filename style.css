@@ -43,6 +43,7 @@
   background: transparent;
   display: block;
   margin-bottom: 1vh;
+  cursor: pointer;
 }
 
 #game {
@@ -70,6 +71,7 @@
   height: 304px;
   margin-left: 15%;
   margin-bottom: 5%;
+  cursor: pointer;
 }
 
 #miner_motion {
@@ -78,6 +80,7 @@
   margin-left: 15%;
   margin-bottom: 9%;
   display: none;
+  cursor: pointer;
 }
 
 #message {
@@ -148,13 +151,18 @@
 
 .modal-content {
   background-color: rgba(255, 255, 255, 0.95);
-  margin: 15% auto;
+  margin: 5% auto; /* 상단에서 약간의 간격을 두고 중앙에 나타나도록 설정 */
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 50%; /* 모달 창의 너비를 더 줄입니다 */
   max-height: 70%;
   overflow-y: auto;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .close {
@@ -173,6 +181,7 @@
 #inventory-table, #list-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 0.9em; /* 폰트 크기 조정 */
 }
 
 #inventory-table th, #inventory-table td, #list-table th, #list-table td {
@@ -185,11 +194,54 @@
   background-color: #f2f2f2;
 }
 
-#inventory-table th, #inventory-table td, #list-table th, #list-table td {
-  width: 25%;
+/* 열 너비를 자동으로 설정 */
+#inventory-table th:nth-child(1),
+#inventory-table td:nth-child(1),
+#list-table th:nth-child(1),
+#list-table td:nth-child(1) {
+  width: 20%;
+}
+
+#inventory-table th:nth-child(2),
+#inventory-table td:nth-child(2),
+#list-table th:nth-child(2),
+#list-table td:nth-child(2) {
+  width: 40%;
+}
+
+#inventory-table th:nth-child(3),
+#inventory-table td:nth-child(3),
+#list-table th:nth-child(3),
+#list-table td:nth-child(3) {
+  width: 20%;
+}
+
+#inventory-table th:nth-child(4),
+#inventory-table td:nth-child(4) {
+  width: 20%;
 }
 
 /* 할일 완료 줄긋기 */
 .completed {
   text-decoration: line-through;
+}
+
+/* 미디어 쿼리를 사용하여 모바일 화면 스타일 조정 */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 90%; /* 모바일 화면에서 모달 너비를 넓게 설정 */
+    padding: 10px;
+  }
+
+  #inventory-table, #list-table {
+    font-size: 0.8em; /* 폰트 크기 조정 */
+  }
+
+  #inventory-table th, #inventory-table td, #list-table th, #list-table td {
+    padding: 2px; /* 패딩 조정 */
+  }
+
+  #inventory-table th, #list-table th {
+    font-size: 1em; /* 헤더 폰트 크기 조정 */
+  }
 }
