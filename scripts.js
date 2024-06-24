@@ -4,7 +4,7 @@ let excelData = [];
 
 // list.xlsx 데이터를 서버에서 가져오는 함수
 const loadListData = () => {
-  fetch('http://localhost:3000/api/list-data')
+  fetch('https://port-0-diggit-lxss6wt4c9526a7f.sel5.cloudtype.app/api/list-data')
     .then(response => response.json())
     .then(data => {
       excelData = data;
