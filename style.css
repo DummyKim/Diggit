@@ -1,82 +1,195 @@
 * {  
-  margin:0;  /* 브라우저 기본 마진 리셋 */
-  padding:0;  /* 브라우저 기본 패딩 리셋 */
-  box-sizing: border-box;  /* 테두리까지 포함해서 박스 모델 너비로 계산 */
+  margin:0;  
+  padding:0;  
+  box-sizing: border-box;  
 }
 
-#container{
-  width:100%;   /* 내용 전체의 너비 */
-  margin:0px auto;  /* 내용을 화면 가운데 배치하도록 좌우 마진을 auto로 */
+#container {
+  width: 100%;
+  margin: 0 auto;
 }
 
-#top{
-  height:70vh;
-  width:100%;
+#top {
+  height: 70vh;
+  width: 100%;
   display: flex;
-  background: linear-gradient(to bottom, skyblue,white 87%, rgb(106, 81, 55) 3%);
+  background: linear-gradient(to bottom, skyblue, white 87%, rgb(106, 81, 55) 3%);
 }
 
-#bottom{
-  height:30vh;
-  width:100%;
+#bottom {
+  height: 30vh;
+  width: 100%;
   display: flex;
   background: linear-gradient(to bottom, rgb(106, 81, 55), sienna);
 }
 
-#top_main, #bottom_main{
-  height:100%;
-  width:100%;
+#top_main, #bottom_main {
+  height: 100%;
+  width: 100%;
 }
 
-#title, #message{
+#title, #message {
   text-align: center;
-  height:15%;
+  height: 15%;
 }
 
-#menu{
-  float:right;
+#menu {
+  float: right;
 }
 
-.icon{
-  width:70px;
-  height:70px;
-  background:transparent;
+.icon {
+  width: 70px;
+  height: 70px;
+  background: transparent;
   display: block;
-  margin-bottom:1vh;
+  margin-bottom: 1vh;
 }
 
-#game{
+#game {
   display: flex;
-  align-items:end;
+  align-items: end;
   justify-content: center;
-  height:70%;
+  height: 70%;
 }
 
-#animation{
+#animation {
   display: flex;
   align-items: baseline;
 }
 
-
-#miner_div{
-  background-image:url(img/rock_background.png);
-  background-repeat:no-repeat;
+#miner_div {
+  background-image: url(img/rock_background.png);
+  background-repeat: no-repeat;
   background-position: 50% 100%;
   width: 500px;
   height: auto;
 }
 
-#miner_stop{
-  width:291px;
-  height:304px;
-  margin-left:15%;
-  margin-bottom:5%;
+#miner_stop {
+  width: 291px;
+  height: 304px;
+  margin-left: 15%;
+  margin-bottom: 5%;
 }
 
-#miner_motion{
-  width:291px;
-  height:304px;
-  margin-left:15%;
-  margin-bottom:9%;
-  display:none;
+#miner_motion {
+  width: 291px;
+  height: 304px;
+  margin-left: 15%;
+  margin-bottom: 9%;
+  display: none;
+}
+
+#message {
+  text-align: center;
+  height: 15%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.speech-bubble {
+  position: relative;
+  background: white;
+  border: 3px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  max-width: 100%;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  white-space: wrap;
+  font-size: large;
+  opacity: 1;
+  transition: opacity 2s;
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  margin-left: -10px;
+  width: 0;
+  height: 0;
+  border: 10px solid;
+  border-color: white transparent transparent transparent;
+}
+
+.speech-bubble::before {
+  content: '';
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  margin-left: -13px;
+  width: 0;
+  height: 0;
+  border: 13px solid;
+  border-color: black transparent transparent transparent;
+}
+
+.hidden {
+  opacity: 0;
+  transition: opacity 2s;
+}
+
+/* 모달 스타일 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: rgba(255, 255, 255, 0.95);
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-height: 70%;
+  overflow-y: auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover, .close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#inventory-table, #list-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#inventory-table th, #inventory-table td, #list-table th, #list-table td {
+  border: none;
+  padding: 4px;
+  text-align: left;
+}
+
+#inventory-table th, #list-table th {
+  background-color: #f2f2f2;
+}
+
+#inventory-table th, #inventory-table td, #list-table th, #list-table td {
+  width: 25%;
+}
+
+/* 할일 완료 줄긋기 */
+.completed {
+  text-decoration: line-through;
 }

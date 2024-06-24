@@ -1,12 +1,10 @@
-// index.js
-
 const express = require('express');
 const cors = require('cors');
 const xlsx = require('xlsx');
 const path = require('path');
 
 const app = express();
-const PORT = 5500; // 포트를 5500으로 변경
+const PORT = 3000;
 
 // CORS 설정
 app.use(cors());
@@ -16,6 +14,7 @@ app.use(express.json());
 
 // 엑셀 파일 경로
 const excelFilePath = path.join(__dirname, 'items.xlsx');
+const listFilePath = path.join(__dirname, 'list.xlsx');
 
 // 엑셀 파일을 읽어서 확률 및 데이터를 가져오는 함수
 const getExcelData = (filePath) => {
@@ -35,6 +34,14 @@ const getExcelData = (filePath) => {
     const data = xlsx.utils.sheet_to_json(sheet, { header: 1 });
 
     return { data, probabilities };
+};
+
+// 엑셀 파일을 읽어서 데이터를 가져오는 함수
+const getListData = (filePath) => {
+    const workbook = xlsx.readFile(filePath);
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const data = xlsx.utils.sheet_to_json(sheet);
+    return data;
 };
 
 // 확률에 따라 id를 선택하는 함수
@@ -81,6 +88,17 @@ app.get('/api/generate-id', (req, res) => {
     } catch (error) {
         console.error('Error generating ID:', error);
         res.status(500).send('Error generating ID');
+    }
+});
+
+// list.xlsx 데이터를 클라이언트로 전달하는 엔드포인트 추가
+app.get('/api/list-data', (req, res) => {
+    try {
+        const data = getListData(listFilePath);
+        res.json(data);
+    } catch (error) {
+        console.error('Error reading list.xlsx:', error);
+        res.status(500).send('Error reading list.xlsx');
     }
 });
 
