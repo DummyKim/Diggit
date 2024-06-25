@@ -260,18 +260,19 @@
   #miner_motion {
     width: 70%;  /* 화면 너비의 50%로 설정 */
     height: auto; /* 비율에 맞게 높이 자동 조정 */
-    margin-left: 10%; /* 좌측 여백 줄이기 */
+    margin-left: 15%; /* 좌측 여백 줄이기 */
     outline: none; /* 파란색 네모 제거 */
   }
 
   #miner_div {
+    margin-left:20%;
     background-size: contain; /* 배경 크기를 div에 맞춤 */
     width: 100%; /* 화면 너비 100% */
     height: auto; /* 비율에 맞게 높이 자동 조정 */
   }
 
   .speech-bubble{
-    font-size: xx-large;
+    font-size: x-large;
   }
 
 }
