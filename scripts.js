@@ -5,6 +5,11 @@ const item_obtained = [];
 let isSoundOn = true;
 let autoClickInterval = null;
 
+function preloadImages() {
+  const minerMotionImage = new Image();
+  minerMotionImage.src = 'img/miner_motion.gif';
+}
+
 // list.xlsx 데이터를 서버에서 가져오는 함수
 const loadListData = () => {
   fetch('https://port-0-diggit-lxss6wt4c9526a7f.sel5.cloudtype.app/api/list-data')
