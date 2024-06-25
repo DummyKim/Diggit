@@ -11,6 +11,7 @@ const loadListData = () => {
       excelData = data;
       console.log('Loaded list data:', excelData);
       populateListTable();
+      updateItemCounts();
       checkAndStrikeItems();
     })
     .catch(error => {
@@ -58,6 +59,7 @@ document.getElementById('miner_stop').addEventListener('click', function() {
 
       addItemToTable(category, item_name, rarity);
       addItemToObtained(item_name);
+      updateItemCounts();
       checkAndStrikeItems();
     })
     .catch(error => {
@@ -165,4 +167,12 @@ function checkAndStrikeItems() {
       statusCell.textContent = '(획득)';
     }
   });
+}
+
+function updateItemCounts() {
+  const obtainedCount = item_obtained.length;
+  const totalCount = excelData.length;
+
+  document.getElementById('obtained-count').textContent = obtainedCount;
+  document.getElementById('total-count').textContent = totalCount;
 }
