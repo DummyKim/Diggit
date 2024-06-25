@@ -1,6 +1,7 @@
 let hideMessageTimeout;
 const itemCounts = {};
 let excelData = [];
+const item_obtained = [];
 
 // list.xlsx 데이터를 서버에서 가져오는 함수
 const loadListData = () => {
@@ -8,8 +9,9 @@ const loadListData = () => {
     .then(response => response.json())
     .then(data => {
       excelData = data;
-      console.log('Loaded list data:', excelData); // 콘솔 로그 추가
+      console.log('Loaded list data:', excelData);
       populateListTable();
+      checkAndStrikeItems();
     })
     .catch(error => {
       console.error('Error loading list data:', error);
@@ -30,11 +32,11 @@ document.getElementById('miner_stop').addEventListener('click', function() {
   fetch('https://port-0-diggit-lxss6wt4c9526a7f.sel5.cloudtype.app/api/generate-id')
     .then(response => response.json())
     .then(data => {
-      const id = data.result[0]; // id, result 배열의 첫번째 값
-      const rarity = data.result[1]; // 희귀도, result 배열의 두 번째 값
-      const category = data.result[2]; // 카테고리, result 배열의 세번째 값
-      const item_name = data.result[3]; // 아이템 이름, result 배열의 네 번째 값
-      console.log('Generated item:', item_name); // 콘솔 로그 추가
+      const id = data.result[0];
+      const rarity = data.result[1];
+      const category = data.result[2];
+      const item_name = data.result[3];
+      console.log('Generated item:', item_name);
       messageDiv.innerHTML = `<div class="speech-bubble">${item_name}(${rarity}등급) 아이템을 획득했습니다!</div>`;
 
       clearTimeout(hideMessageTimeout);
@@ -55,7 +57,8 @@ document.getElementById('miner_stop').addEventListener('click', function() {
       }, 3000);
 
       addItemToTable(category, item_name, rarity);
-      checkAndStrikeItem(item_name);
+      addItemToObtained(item_name);
+      checkAndStrikeItems();
     })
     .catch(error => {
       console.error('Error fetching data:', error);
@@ -123,14 +126,15 @@ function populateListTable() {
   const tableBody = document.querySelector('#list-table tbody');
   tableBody.innerHTML = '';
   excelData.forEach(item => {
-    const itemName = item.아이템.trim(); // 공백 제거
+    const itemName = item.아이템.trim();
     const row = document.createElement('tr');
     row.setAttribute('data-item', itemName);
-    console.log('Setting data-item:', itemName); // 콘솔 로그 추가
+    console.log('Setting data-item:', itemName);
     row.innerHTML = `
       <td>${item.카테고리}</td>
       <td>${item.아이템}</td>
       <td>${item.희귀도}</td>
+      <td class="status"></td> <!-- 새 열 추가 -->
     `;
     tableBody.appendChild(row);
   });
@@ -138,22 +142,27 @@ function populateListTable() {
   // 테이블 행 확인
   const rows = document.querySelectorAll('#list-table tr');
   rows.forEach(row => {
-    console.log('Row data-item:', row.getAttribute('data-item')); // 추가된 콘솔 로그
+    console.log('Row data-item:', row.getAttribute('data-item'));
   });
 }
 
-function checkAndStrikeItem(item_name) {
-  console.log('Checking item for strike:', item_name); // 콘솔 로그 추가
-  const normalizedItemName = item_name.trim();
-  console.log('Normalized item name for comparison:', normalizedItemName); // 콘솔 로그 추가
+function addItemToObtained(item_name) {
+  if (!item_obtained.includes(item_name)) {
+    item_obtained.push(item_name);
+    console.log('Item obtained added:', item_name);
+  }
+}
+
+function checkAndStrikeItems() {
+  console.log('Checking items for strike:', item_obtained);
   const rows = document.querySelectorAll('#list-table tr');
-  
   rows.forEach(row => {
     const dataItem = row.getAttribute('data-item');
-    console.log('Comparing with:', dataItem); // 콘솔 로그 추가
-    if (dataItem && dataItem === normalizedItemName) {
-      console.log('Item matched:', normalizedItemName); // 콘솔 로그 추가
+    if (dataItem && item_obtained.includes(dataItem)) {
+      console.log('Item matched and completed:', dataItem);
       row.classList.add('completed');
+      const statusCell = row.querySelector('.status');
+      statusCell.textContent = '(획득)';
     }
   });
 }

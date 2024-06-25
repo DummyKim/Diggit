@@ -217,12 +217,27 @@
 }
 
 #inventory-table th:nth-child(4),
-#inventory-table td:nth-child(4) {
+#inventory-table td:nth-child(4),
+#list-table th:nth-child(4),
+#list-table td:nth-child(4) {
+  width: 20%;
+}
+
+#inventory-table th:nth-child(5),
+#inventory-table td:nth-child(5),
+#list-table th:nth-child(5),
+#list-table td:nth-child(5) {
   width: 20%;
 }
 
 /* 할일 완료 줄긋기 */
 .completed {
+  background-color: #ffe6e6; /* 연한 분홍색 배경 */
+}
+
+.completed td:nth-child(1),
+.completed td:nth-child(2),
+.completed td:nth-child(3) {
   text-decoration: line-through;
 }
 
