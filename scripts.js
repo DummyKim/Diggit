@@ -5,6 +5,22 @@ const item_obtained = [];
 let isSoundOn = true;
 let autoClickInterval = null;
 
+
+// 이미지 미리 불러오기
+function preloadImages() {
+  const images = [
+    'img/miner_motion.gif',
+    'img/sound_off.png',
+    'img/auto_on.png'
+  ];
+
+  images.forEach((image) => {
+    const img = new Image();
+    img.src = image;
+  });
+}
+
+
 // 등급에 따른 배경색 클래스를 설정하는 함수
 function getRarityClass(rarity) {
   switch (rarity) {
@@ -126,7 +142,7 @@ function showMessage(item_name, rarity) {
   // 클래스와 텍스트를 콘솔에 출력
   console.log(`Applying class: ${rarityClass} to rarity text: ${rarityText}`);
 
-  messageDiv.innerHTML = `<div class="speech-bubble"><span class="${rarityClass}">${item_name}(${rarityText})</span> 아이템을 획득했습니다!</div>`;
+  messageDiv.innerHTML = `<div class="speech-bubble">${item_name} <span class="${rarityClass}">(${rarityText})</span> 아이템을 획득했습니다!</div>`;
   clearTimeout(hideMessageTimeout);
 
   const bubble = messageDiv.querySelector('.speech-bubble');
