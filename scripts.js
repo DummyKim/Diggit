@@ -5,9 +5,22 @@ const item_obtained = [];
 let isSoundOn = true;
 let autoClickInterval = null;
 
-function preloadImages() {
-  const minerMotionImage = new Image();
-  minerMotionImage.src = 'img/miner_motion.gif';
+// 등급에 따른 배경색 클래스를 설정하는 함수
+function getRarityClass(rarity) {
+  switch (rarity) {
+    case '1':
+      return 'rarity-1';
+    case '2':
+      return 'rarity-2';
+    case '3':
+      return 'rarity-3';
+    case '4':
+      return 'rarity-4';
+    case '5':
+      return 'rarity-5';
+    default:
+      return '';
+  }
 }
 
 // list.xlsx 데이터를 서버에서 가져오는 함수
@@ -81,28 +94,11 @@ function mineItem() {
     .then(response => response.json())
     .then(data => {
       const id = data.result[0];
-      const rarity = data.result[1];
+      const rarity = String(data.result[1]); // 문자열로 변환
       const category = data.result[2];
       const item_name = data.result[3];
       console.log('Generated item:', item_name);
-      messageDiv.innerHTML = `<div class="speech-bubble">${item_name}(${rarity}등급) 아이템을 획득했습니다!</div>`;
-
-      clearTimeout(hideMessageTimeout);
-
-      const bubble = messageDiv.querySelector('.speech-bubble');
-      if (bubble) {
-        bubble.classList.remove('hidden');
-      }
-
-      hideMessageTimeout = setTimeout(() => {
-        const bubble = messageDiv.querySelector('.speech-bubble');
-        if (bubble) {
-          bubble.classList.add('hidden');
-          setTimeout(() => {
-            messageDiv.innerHTML = '';
-          }, 2000); 
-        }
-      }, 3000);
+      showMessage(item_name, rarity);
 
       addItemToTable(category, item_name, rarity);
       addItemToObtained(item_name);
@@ -120,6 +116,33 @@ function mineItem() {
     soundEffect.pause();
     soundEffect.currentTime = 0;
   }, 1580);
+}
+
+function showMessage(item_name, rarity) {
+  const messageDiv = document.getElementById('message');
+  const rarityClass = getRarityClass(rarity);
+  const rarityText = `${rarity}등급`;
+
+  // 클래스와 텍스트를 콘솔에 출력
+  console.log(`Applying class: ${rarityClass} to rarity text: ${rarityText}`);
+
+  messageDiv.innerHTML = `<div class="speech-bubble"><span class="${rarityClass}">${item_name}(${rarityText})</span> 아이템을 획득했습니다!</div>`;
+  clearTimeout(hideMessageTimeout);
+
+  const bubble = messageDiv.querySelector('.speech-bubble');
+  if (bubble) {
+    bubble.classList.remove('hidden');
+  }
+
+  hideMessageTimeout = setTimeout(() => {
+    const bubble = messageDiv.querySelector('.speech-bubble');
+    if (bubble) {
+      bubble.classList.add('hidden');
+      setTimeout(() => {
+        messageDiv.innerHTML = '';
+      }, 2000); 
+    }
+  }, 3000);
 }
 
 function addItemToTable(category, item_name, rarity) {
