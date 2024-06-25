@@ -142,7 +142,7 @@ function showMessage(item_name, rarity) {
   // 클래스와 텍스트를 콘솔에 출력
   console.log(`Applying class: ${rarityClass} to rarity text: ${rarityText}`);
 
-  messageDiv.innerHTML = `<div class="speech-bubble">${item_name} <span class="${rarityClass}">(${rarityText})</span> 아이템을 획득했습니다!</div>`;
+  messageDiv.innerHTML = `<div class="speech-bubble"><span class="${rarityClass}">${item_name}(${rarityText})</span>을 획득했습니다!</div>`;
   clearTimeout(hideMessageTimeout);
 
   const bubble = messageDiv.querySelector('.speech-bubble');
