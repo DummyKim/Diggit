@@ -2,6 +2,8 @@ let hideMessageTimeout;
 const itemCounts = {};
 let excelData = [];
 const item_obtained = [];
+let isSoundOn = true;
+let autoClickInterval = null;
 
 // list.xlsx 데이터를 서버에서 가져오는 함수
 const loadListData = () => {
@@ -20,6 +22,44 @@ const loadListData = () => {
 };
 
 document.getElementById('miner_stop').addEventListener('click', function() {
+  mineItem();
+});
+
+document.getElementById('inventory-icon').addEventListener('click', function() {
+  const modal = document.getElementById('inventory-modal');
+  modal.style.display = 'block';
+});
+
+document.getElementById('list-icon').addEventListener('click', function() {
+  const modal = document.getElementById('list-modal');
+  modal.style.display = 'block';
+  loadListData();
+});
+
+document.getElementById('sound-icon').addEventListener('click', function() {
+  toggleSound();
+});
+
+document.getElementById('auto-icon').addEventListener('click', function() {
+  toggleAutoClick();
+});
+
+document.querySelectorAll('.close').forEach(function(closeButton) {
+  closeButton.addEventListener('click', function() {
+    const modal = closeButton.closest('.modal');
+    modal.style.display = 'none';
+  });
+});
+
+window.addEventListener('click', function(event) {
+  const inventoryModal = document.getElementById('inventory-modal');
+  const listModal = document.getElementById('list-modal');
+  if (event.target == inventoryModal || event.target == listModal) {
+    event.target.style.display = 'none';
+  }
+});
+
+function mineItem() {
   const staticImage = document.getElementById('miner_stop');
   const animatedGif = document.getElementById('miner_motion');
   const soundEffect = document.getElementById('soundEffect');
@@ -28,7 +68,9 @@ document.getElementById('miner_stop').addEventListener('click', function() {
   staticImage.style.display = 'none';
   animatedGif.src = 'img/miner_motion.gif';
   animatedGif.style.display = 'block';
-  soundEffect.play();
+  if (isSoundOn) {
+    soundEffect.play();
+  }
 
   fetch('https://port-0-diggit-lxss6wt4c9526a7f.sel5.cloudtype.app/api/generate-id')
     .then(response => response.json())
@@ -73,33 +115,7 @@ document.getElementById('miner_stop').addEventListener('click', function() {
     soundEffect.pause();
     soundEffect.currentTime = 0;
   }, 1580);
-});
-
-document.getElementById('inventory-icon').addEventListener('click', function() {
-  const modal = document.getElementById('inventory-modal');
-  modal.style.display = 'block';
-});
-
-document.getElementById('list-icon').addEventListener('click', function() {
-  const modal = document.getElementById('list-modal');
-  modal.style.display = 'block';
-  loadListData();
-});
-
-document.querySelectorAll('.close').forEach(function(closeButton) {
-  closeButton.addEventListener('click', function() {
-    const modal = closeButton.closest('.modal');
-    modal.style.display = 'none';
-  });
-});
-
-window.addEventListener('click', function(event) {
-  const inventoryModal = document.getElementById('inventory-modal');
-  const listModal = document.getElementById('list-modal');
-  if (event.target == inventoryModal || event.target == listModal) {
-    event.target.style.display = 'none';
-  }
-});
+}
 
 function addItemToTable(category, item_name, rarity) {
   const tableBody = document.querySelector('#inventory-table tbody');
@@ -175,4 +191,29 @@ function updateItemCounts() {
 
   document.getElementById('obtained-count').textContent = obtainedCount;
   document.getElementById('total-count').textContent = totalCount;
+}
+
+function toggleSound() {
+  const soundIcon = document.getElementById('sound-icon');
+  const soundEffect = document.getElementById('soundEffect');
+  isSoundOn = !isSoundOn;
+  soundIcon.src = isSoundOn ? 'img/sound_on.png' : 'img/sound_off.png';
+  if (!isSoundOn) {
+    soundEffect.pause();
+    soundEffect.currentTime = 0;
+  }
+}
+
+function toggleAutoClick() {
+  const autoIcon = document.getElementById('auto-icon');
+  if (autoClickInterval) {
+    clearInterval(autoClickInterval);
+    autoClickInterval = null;
+    autoIcon.src = 'img/auto_off.png';
+  } else {
+    autoClickInterval = setInterval(() => {
+      mineItem();
+    }, 2000); // 2초마다 클릭
+    autoIcon.src = 'img/auto_on.png';
+  }
 }
