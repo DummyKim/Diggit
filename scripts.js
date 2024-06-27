@@ -261,3 +261,42 @@ function toggleAutoClick() {
     autoIcon.src = 'img/auto_on.png';
   }
 }
+
+
+// 쿠키 설정 함수
+function setCookie(name, value, days) {
+  const d = new Date();
+  d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = "expires=" + d.toUTCString();
+  document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+
+// 쿠키 읽기 함수
+function getCookie(name) {
+  const cname = name + "=";
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(cname) == 0) {
+      return c.substring(cname.length, c.length);
+    }
+  }
+  return "";
+}
+
+// 페이지 로드 시 쿠키에서 데이터 복원
+window.onload = function() {
+  // 쿠키에서 데이터 읽기
+  const obtainedItems = getCookie('item_obtained');
+  if (obtainedItems) {
+    item_obtained = JSON.parse(obtainedItems);
+    console.log('Restored items from cookie:', item_obtained);
+    // UI 업데이트 (획득한 아이템에 대한 로직 호출)
+    updateItemCounts();
+    checkAndStrikeItems();
+  }
+}
