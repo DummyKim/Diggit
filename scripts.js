@@ -1,12 +1,3 @@
-let hideMessageTimeout;
-const itemCounts = {};
-let excelData = [];
-const item_obtained = [];
-let isSoundOn = true;
-let autoClickInterval = null;
-
-
-// 이미지 미리 불러오기
 function preloadImages() {
   const images = [
     'img/miner_motion.gif',
@@ -20,6 +11,51 @@ function preloadImages() {
   });
 }
 
+// 쿠키 설정 함수
+function setCookie(name, value, days) {
+  const d = new Date();
+  d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = "expires=" + d.toUTCString();
+  document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+
+// 쿠키 읽기 함수
+function getCookie(name) {
+  const cname = name + "=";
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(cname) == 0) {
+      return c.substring(cname.length, c.length);
+    }
+  }
+  return "";
+}
+
+// 페이지 로드 시 쿠키에서 데이터 복원
+window.onload = function() {
+  // 쿠키에서 데이터 읽기
+  const obtainedItems = getCookie('item_obtained');
+  if (obtainedItems) {
+    item_obtained = JSON.parse(obtainedItems);
+    console.log('Restored items from cookie:', item_obtained);
+    // UI 업데이트 (획득한 아이템에 대한 로직 호출)
+    updateItemCounts();
+    checkAndStrikeItems();
+  }
+}
+
+// 기존 코드 유지
+let hideMessageTimeout;
+const itemCounts = {};
+let excelData = [];
+let item_obtained = []; // 배열 선언 수정
+let isSoundOn = true;
+let autoClickInterval = null;
 
 // 등급에 따른 배경색 클래스를 설정하는 함수
 function getRarityClass(rarity) {
@@ -142,7 +178,7 @@ function showMessage(item_name, rarity) {
   // 클래스와 텍스트를 콘솔에 출력
   console.log(`Applying class: ${rarityClass} to rarity text: ${rarityText}`);
 
-  messageDiv.innerHTML = `<div class="speech-bubble"><span class="${rarityClass}">${item_name}(${rarityText})</span>을 획득했습니다!</div>`;
+  messageDiv.innerHTML = `<div class="speech-bubble">${item_name} <span class="${rarityClass}">(${rarityText})</span> 아이템을 획득했습니다!</div>`;
   clearTimeout(hideMessageTimeout);
 
   const bubble = messageDiv.querySelector('.speech-bubble');
@@ -212,6 +248,8 @@ function addItemToObtained(item_name) {
   if (!item_obtained.includes(item_name)) {
     item_obtained.push(item_name);
     console.log('Item obtained added:', item_name);
+    // 쿠키에 저장
+    setCookie('item_obtained', JSON.stringify(item_obtained), 7);
   }
 }
 
@@ -259,44 +297,5 @@ function toggleAutoClick() {
       mineItem();
     }, 2000); // 2초마다 클릭
     autoIcon.src = 'img/auto_on.png';
-  }
-}
-
-
-// 쿠키 설정 함수
-function setCookie(name, value, days) {
-  const d = new Date();
-  d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-  const expires = "expires=" + d.toUTCString();
-  document.cookie = name + "=" + value + ";" + expires + ";path=/";
-}
-
-// 쿠키 읽기 함수
-function getCookie(name) {
-  const cname = name + "=";
-  const decodedCookie = decodeURIComponent(document.cookie);
-  const ca = decodedCookie.split(';');
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(cname) == 0) {
-      return c.substring(cname.length, c.length);
-    }
-  }
-  return "";
-}
-
-// 페이지 로드 시 쿠키에서 데이터 복원
-window.onload = function() {
-  // 쿠키에서 데이터 읽기
-  const obtainedItems = getCookie('item_obtained');
-  if (obtainedItems) {
-    item_obtained = JSON.parse(obtainedItems);
-    console.log('Restored items from cookie:', item_obtained);
-    // UI 업데이트 (획득한 아이템에 대한 로직 호출)
-    updateItemCounts();
-    checkAndStrikeItems();
   }
 }
