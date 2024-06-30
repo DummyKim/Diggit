@@ -1,7 +1,7 @@
 let hideMessageTimeout;
-const itemCounts = {};
+let itemCounts = {};
 let excelData = [];
-const item_obtained = [];
+let item_obtained = [];
 let isSoundOn = true;
 let autoClickInterval = null;
 
@@ -120,6 +120,7 @@ function mineItem() {
       addItemToObtained(item_name);
       updateItemCounts();
       checkAndStrikeItems();
+      saveGameState();
     })
     .catch(error => {
       console.error('Error fetching data:', error);
@@ -246,6 +247,7 @@ function toggleSound() {
     soundEffect.pause();
     soundEffect.currentTime = 0;
   }
+  saveGameState();
 }
 
 function toggleAutoClick() {
@@ -259,5 +261,63 @@ function toggleAutoClick() {
       mineItem();
     }, 2000); // 2초마다 클릭
     autoIcon.src = 'img/auto_on.png';
+  }
+}
+
+
+//local storage에 저장 기능//
+
+function saveGameState() {
+  localStorage.setItem('itemCounts', JSON.stringify(itemCounts));
+  localStorage.setItem('item_obtained', JSON.stringify(item_obtained));
+  localStorage.setItem('isSoundOn', JSON.stringify(isSoundOn));
+}
+
+//local storage에서 불러오기 기능//
+
+function loadGameState() {
+  const savedItemCounts = localStorage.getItem('itemCounts');
+  const savedItemObtained = localStorage.getItem('item_obtained');
+  const savedIsSoundOn = localStorage.getItem('isSoundOn');
+
+  if (savedItemCounts) {
+    itemCounts = JSON.parse(savedItemCounts);
+  }
+  if (savedItemObtained) {
+    item_obtained = JSON.parse(savedItemObtained);
+  }
+  if (savedIsSoundOn !== null) {
+    isSoundOn = JSON.parse(savedIsSoundOn);
+    updateSoundIcon();
+  }
+}
+
+function updateSoundIcon() {
+  const soundIcon = document.getElementById('sound-icon');
+  soundIcon.src = isSoundOn ? 'img/sound_on.png' : 'img/sound_off.png';
+}
+
+
+// 페이지 로드시 게임 상태 불러오기 //
+document.addEventListener('DOMContentLoaded', function() {
+  loadGameState();
+  populateInventoryTable();
+  loadListData();
+});
+
+function populateInventoryTable() {
+  const tableBody = document.querySelector('#inventory-table tbody');
+  tableBody.innerHTML = '';
+  for (const [key, count] of Object.entries(itemCounts)) {
+    const [category, item_name, rarity] = key.split('-');
+    const row = document.createElement('tr');
+    row.setAttribute('data-key', key);
+    row.innerHTML = `
+      <td>${category}</td>
+      <td>${item_name}</td>
+      <td>${rarity}</td>
+      <td class="count">x ${count}</td>
+    `;
+    tableBody.appendChild(row);
   }
 }
